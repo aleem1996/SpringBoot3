@@ -57,4 +57,35 @@ public class BlogRepositoryTest {
 
         Assertions.assertThat(capturedBlog).hasSize(2);
     }
+
+    @Test
+    public void testCreateBlog() {
+        // Create new blog entity
+        Blog newBlog = createTestBlog();
+
+        // Save using repository (not TestEntityManager)
+        Blog savedBlog = blogRepository.save(newBlog);
+
+        // Verify the save operation
+        Assertions.assertThat(savedBlog).isNotNull();
+        Assertions.assertThat(savedBlog.getId()).isNotNull();
+        Assertions.assertThat(savedBlog.getTitle()).isEqualTo(newBlog.getTitle());
+        Assertions.assertThat(savedBlog.getContent()).isEqualTo(newBlog.getContent());
+        Assertions.assertThat(savedBlog.getAuthor()).isEqualTo(newBlog.getAuthor());
+
+        // Verify it's actually persisted by fetching it
+        Optional<Blog> fetchedBlog = blogRepository.findById(savedBlog.getId());
+        Assertions.assertThat(fetchedBlog).isPresent();
+        Assertions.assertThat(fetchedBlog.get()).isEqualTo(savedBlog);
+    }
+
+    // Helper method to create test blog data
+    private Blog createTestBlog() {
+        Blog blog = new Blog();
+        blog.setTitle("Test Title");
+        blog.setContent("Test Content");
+        blog.setAuthor("Test Author");
+        blog.setCreatedAt(LocalDateTime.now());
+        return blog;
+    }
 }
