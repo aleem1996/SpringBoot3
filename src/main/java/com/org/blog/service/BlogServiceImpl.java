@@ -34,7 +34,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-//    @Cacheable(key = "#id", unless = "#result == null")
+    @Cacheable(key = "#id", unless = "#result == null")
     public BlogResponse getBlogById(Long id) {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new BlogNotFoundException("not found"));
